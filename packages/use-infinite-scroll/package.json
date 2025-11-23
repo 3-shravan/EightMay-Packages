@@ -1,0 +1,18 @@
+{
+  "name": "@eightmay/use-infinite-scroll",
+  "version": "1.0.0",
+  "description": "Lightweight React infinite scroll hook",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rimraf dist && rollup -c",
+    "prepack": "pnpm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  }
+}
