@@ -21,11 +21,14 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
+    "preinstall": "node scripts/workspace-guard.js",
+    "postinstall": "node scripts/workspace-guard.js",
+    "prebuild": "node scripts/workspace-guard.js",
+    "postbuild": "node scripts/workspace-guard.js",
     "guard": "node scripts/workspace-guard.js",
     "new": "node scripts/create-package.js",
     "build": "pnpm -r --parallel build",
     "clean": "rimraf packages/**/dist",
     "changeset": "changeset"
-  },
-  "preinstall": "pnpm guard"
+  }
 }

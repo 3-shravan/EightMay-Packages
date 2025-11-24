@@ -11,17 +11,17 @@ const pkg = require("./package.json");
 export default [
   {
     input: "src/index.ts",
-    external: [
-      ...Object.keys(pkg.peerDependencies || {}),
-      ...Object.keys(pkg.dependencies || {}),
-    ],
+    external: [...Object.keys(pkg.peerDependencies || {})],
+
     output: [
       { file: pkg.module, format: "esm" },
       { file: pkg.main, format: "cjs", exports: "auto" },
     ],
     plugins: [
       json(),
-      resolve(),
+      resolve({
+        preferBuiltins: true,
+      }),
       commonjs(),
       typescript({
         tsconfig: "./tsconfig.json",

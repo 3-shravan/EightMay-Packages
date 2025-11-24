@@ -1,9 +1,10 @@
 import fs from "fs";
 import path from "path";
 import prompts from "prompts";
-// ───────────────────────────────────────────
-// 1. Ask user what package type to create
-// ───────────────────────────────────────────
+
+/* ───────────────────────────────────────────
+   1. Ask user what package type to create
+──────────────────────────────────────────── */
 const answers = await prompts([
   {
     type: "select",
@@ -19,7 +20,9 @@ const answers = await prompts([
     type: "text",
     name: "name",
     message: "Enter package name (e.g., useDebounce, formatDate, Button):",
-    validate: (value) => (value.trim() ? true : "Name is required"),
+    validate(value) {
+      return value.trim() ? true : "Name is required";
+    },
   },
 ]);
 
@@ -28,9 +31,9 @@ const pkgName = answers.name.trim();
 
 console.log(`\n🚀 Creating new ${type}: ${pkgName}`);
 
-// ───────────────────────────────────────────
-// 2. Create folder
-// ───────────────────────────────────────────
+/* ───────────────────────────────────────────
+   2. Create folder
+──────────────────────────────────────────── */
 const root = path.resolve(process.cwd(), "packages");
 const newFolder = path.join(root, pkgName);
 
@@ -41,9 +44,9 @@ if (fs.existsSync(newFolder)) {
 
 fs.mkdirSync(newFolder);
 
-// ───────────────────────────────────────────
-// 3. package.json (your exact working setup)
-// ───────────────────────────────────────────
+/* ───────────────────────────────────────────
+   3. package.json (your existing working setup)
+──────────────────────────────────────────── */
 const packageJson = {
   name: `@eightmay/${pkgName}`,
   version: "1.0.0",
@@ -70,9 +73,9 @@ fs.writeFileSync(
   JSON.stringify(packageJson, null, 2)
 );
 
-// ───────────────────────────────────────────
-// 4. tsconfig.json (kept identical to your working setup)
-// ───────────────────────────────────────────
+/* ───────────────────────────────────────────
+   4. tsconfig.json
+──────────────────────────────────────────── */
 const tsconfig = {
   extends: "../../tsconfig.base.json",
   compilerOptions: {
@@ -90,9 +93,9 @@ fs.writeFileSync(
   JSON.stringify(tsconfig, null, 2)
 );
 
-// ───────────────────────────────────────────
-// 5. rollup.config.mjs (identical to your working config)
-// ───────────────────────────────────────────
+/* ───────────────────────────────────────────
+   5. rollup.config.mjs (FIXED + PROTECTED)
+──────────────────────────────────────────── */
 const rollupConfig = `
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
@@ -107,26 +110,27 @@ const pkg = require("./package.json");
 export default [
   {
     input: "src/index.ts",
-    external: [
-      ...Object.keys(pkg.peerDependencies || {}),
-      ...Object.keys(pkg.dependencies || {}),
-    ],
+
+    // 🔥 Only peer deps allowed
+    external: [...Object.keys(pkg.peerDependencies || {})],
+
     output: [
       { file: pkg.module, format: "esm" },
       { file: pkg.main, format: "cjs", exports: "auto" }
     ],
     plugins: [
       json(),
-      resolve(),
+      resolve({ preferBuiltins: true }),
       commonjs(),
       typescript({
         tsconfig: "./tsconfig.json",
         declaration: false,
         declarationMap: false,
         emitDeclarationOnly: false
-      }),
+      })
     ]
   },
+
   {
     input: "src/index.ts",
     output: [{ file: pkg.types, format: "es" }],
@@ -137,9 +141,9 @@ export default [
 
 fs.writeFileSync(path.join(newFolder, "rollup.config.mjs"), rollupConfig);
 
-// ───────────────────────────────────────────
-// 6. Template for src/index.ts
-// ───────────────────────────────────────────
+/* ───────────────────────────────────────────
+   6. Template for src/index.ts
+──────────────────────────────────────────── */
 const templates = {
   hook: `
 export function ${pkgName}() {
@@ -166,17 +170,48 @@ export function ${pkgName}() {
 
 fs.writeFileSync(path.join(newFolder, "src/index.ts"), templates[type]);
 
-// ───────────────────────────────────────────
-// 7. Update aggregator ONLY for Hooks
-// ───────────────────────────────────────────
+/* ───────────────────────────────────────────
+   7. HARD PROTECTION FILES
+──────────────────────────────────────────── */
+
+// 7A: .npmrc (blocks installs)
+fs.writeFileSync(
+  path.join(newFolder, ".npmrc"),
+  `ignore-scripts=true
+package-lock=false
+auto-install-peers=false
+save=false
+save-exact=true
+packageManager=forbidden
+`
+);
+
+// 7B: .gitignore
+fs.writeFileSync(
+  path.join(newFolder, ".gitignore"),
+  `node_modules
+dist
+`
+);
+
+// 7C: .npmignore
+fs.writeFileSync(
+  path.join(newFolder, ".npmignore"),
+  `node_modules
+src
+rollup.config.mjs
+tsconfig.json
+`
+);
+
+/* ───────────────────────────────────────────
+   8. Update aggregator ONLY for hooks
+──────────────────────────────────────────── */
 if (type === "hook") {
   const hooksIndex = path.resolve(process.cwd(), "packages/hooks/src/index.ts");
-
   let content = fs.readFileSync(hooksIndex, "utf8");
   content += `\nexport { ${pkgName} } from "@eightmay/${pkgName}";`;
-
   fs.writeFileSync(hooksIndex, content);
-
   console.log(`✨ Added export to @eightmay/hooks`);
 }
 
