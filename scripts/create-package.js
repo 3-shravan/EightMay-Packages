@@ -50,12 +50,14 @@ fs.mkdirSync(newFolder);
 const packageJson = {
   name: `@eightmay/${pkgName}`,
   version: "1.0.0",
+  license: "MIT",
   description:
     type === "hook"
       ? "Lightweight React hook"
       : type === "utility"
       ? "Utility function"
       : "Reusable React component",
+  keywords: ["eightmay", type, pkgName.toLowerCase()],
   main: "dist/index.cjs",
   module: "dist/index.js",
   types: "dist/index.d.ts",

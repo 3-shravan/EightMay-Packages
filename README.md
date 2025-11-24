@@ -1,108 +1,162 @@
-# Eightmay Monorepo Commands
+# Eightmay Monorepo
 
-## Install pnpm (if not installed yet)
+A monorepo for managing and publishing reusable hooks and packages under the `@eightmay` namespace.
 
-Check:
-```
+---
+
+## Prerequisites
+
+### Install pnpm (if not installed yet)
+
+Check if `pnpm` is installed:
+
+```bash
 pnpm -v
 ```
 
-If not installed:
-```
+If not installed, install it globally:
+
+```bash
 npm install -g pnpm
 ```
 
-## Install ALL dependencies (root workspace)
-```
+---
+
+## Getting Started
+
+### Install All Dependencies (Root Workspace)
+
+Install all dependencies for the monorepo:
+
+```bash
 pnpm install
 ```
 
-## Build all packages
-```
+### Build All Packages
+
+Build every package in the monorepo:
+
+```bash
 pnpm build
 ```
 
-This builds:
-- @eightmay/use-infinite-scroll
-- @eightmay/utils
-- @eightmay/hooks
+This will build all packages under the `@eightmay` namespace.
 
-## Test Locally BEFORE Publishing
+---
 
-### Option A — Test using workspace
+## Testing Locally Before Publishing
+
+### Option A — Test Using Workspace
+
+Add the package directly from the workspace:
+
+```bash
+pnpm add ../eightmay/packages/use-infinite-scroll
 ```
-pnpm add ../eightmay-monorepo/packages/use-infinite-scroll
-```
 
-Use it:
-```ts
+Use it in your code:
+
+```typescript
 import { useInfiniteScroll } from "@eightmay/use-infinite-scroll";
 ```
 
-### Option B — Pack and install
-```
-cd packages/use-infinite-scroll
-pnpm pack
-```
+### Option B — Pack and Install
 
-Install the tarball:
-```
-pnpm add /full/path/to/eightmay-use-infinite-scroll-1.0.0.tgz
-```
+1. Navigate to the package directory:
+   ```bash
+   cd packages/use-infinite-scroll
+   ```
+2. Create a tarball:
+   ```bash
+   pnpm pack
+   ```
+3. Install the tarball:
+   ```bash
+   pnpm add /full/path/to/eightmay-use-infinite-scroll-1.0.0.tgz
+   ```
 
-## Publish Your First Package
-```
-npm login
-cd packages/use-infinite-scroll
-npm publish --access public
-```
+---
 
-Install it:
-```
+## Publishing Packages
+
+### Publish a Single Package
+
+1. Log in to npm:
+   ```bash
+   npm login
+   ```
+2. Navigate to the package directory:
+   ```bash
+   cd packages/use-infinite-scroll
+   ```
+3. Publish the package:
+   ```bash
+   npm publish --access public
+   ```
+
+Install the published package:
+
+```bash
 pnpm add @eightmay/use-infinite-scroll
 ```
 
-## Publish Aggregator @eightmay/hooks
-```
-cd packages/hooks
-npm publish --access public
-```
+### Publish the Aggregator Package (`@eightmay/hooks`)
 
-Use it:
-```ts
+1. Navigate to the aggregator package directory:
+   ```bash
+   cd packages/hooks
+   ```
+2. Publish the aggregator:
+   ```bash
+   npm publish --access public
+   ```
+
+Use the aggregator in your code:
+
+```typescript
 import { useInfiniteScroll } from "@eightmay/hooks";
 ```
 
+---
+
 ## Adding New Hooks
 
-Duplicate:
-```
-packages/use-infinite-scroll → packages/use-debounce
-```
+1. Create a new hook package:
+   ```bash
+   pnpm new
+   ```
+2. Update the `package.json` of the new package:
+   ```json
+   {
+     "name": "@eightmay/use-debounce"
+   }
+   ```
+3. Build the new package:
+   ```bash
+   pnpm --filter @eightmay/use-debounce build
+   ```
+4. Publish the new package:
+   ```bash
+   cd packages/use-debounce
+   npm publish --access public
+   ```
 
-Update package.json:
-```json
-"name": "@eightmay/use-debounce"
-```
+### Add the New Hook to the Aggregator
 
-Build:
-```
-pnpm --filter @eightmay/use-debounce build
-```
+1. Export the new hook in the aggregator:
+   ```typescript
+   export { useDebounce } from "@eightmay/use-debounce";
+   ```
+2. Rebuild and publish the aggregator:
+   ```bash
+   pnpm --filter @eightmay/hooks build
+   npm publish --access public
+   ```
 
-Publish:
-```
-cd packages/use-debounce
-npm publish --access public
-```
+---
 
-Add to aggregator:
-```
-export { useDebounce } from "@eightmay/use-debounce";
-```
+## Notes
 
-Rebuild aggregator:
-```
-pnpm --filter @eightmay/hooks build
-npm publish --access public
-```
+- Always test your packages locally before publishing.
+- Follow semantic versioning for all package updates.
+- Keep the aggregator package up-to-date with all new hooks.

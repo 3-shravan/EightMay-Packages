@@ -3,6 +3,13 @@
   "version": "1.0.1",
   "description": "Collection of useful React hooks from Eightmay",
   "main": "dist/index.cjs",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "hooks",
+    "eightmay",
+    "packages"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
