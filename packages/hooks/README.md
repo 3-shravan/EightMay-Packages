@@ -33,7 +33,17 @@ pnpm add @eightmay/hooks
 
 ## 📘 Usage
 
-Here’s how to use hooks from the aggregator:
+```tsx
+import { useInfiniteScroll, useSmoothScroll } from "@eightmay/hooks";
+//more hooks like this...
+```
+# Here’s how to use hooks from the aggregator:
+
+### 1. `useInfiniteScroll`
+
+```bash
+npm i @eightmay/use-infinite-scroll
+```
 
 ```tsx
 import { useInfiniteScroll } from "@eightmay/hooks";
@@ -80,6 +90,75 @@ export default function Feed() {
 
 ---
 
+### 2. `useSmoothScroll`
+
+```bash
+npm i @eightmay/use-custom-lenis
+```
+
+**Description**: A hook for enabling smooth scrolling behavior using Lenis. It provides a reference to attach to a scrollable container.
+
+#### Usage
+
+```tsx
+import { useSmoothScroll } from "@eightmay/use-custom-lenis";
+
+export default function Container({ children }) {
+  const lenisRef = useSmoothScroll(".scroll");
+
+  return (
+    <div className="flex h-full flex-1">
+      <div
+        ref={lenisRef}
+        className="scroll flex flex-1 flex-col items-center gap-6 overflow-y-scroll px-3.5 py-6 pb-30 md:gap-10 md:px-8 md:py-4 lg:px-15 lg:py-6"
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+### 3. `useIgnoreLenisScroll`
+
+```bash
+npm i @eightmay/use-custom-lenis
+```
+
+**Description**: A hook for temporarily disabling Lenis scrolling on a specific container. Useful for scenarios like modals or dropdowns where you want to ignore Lenis scroll behavior.
+
+#### Usage
+
+```tsx
+import { useIgnoreLenisScroll } from "@eightmay/use-custom-lenis";
+import { AnimatePresence } from "framer-motion";
+import { SearchedUser } from "./SearchedUser";
+
+export const SearchResults = ({ users, loading, isOpen }) => {
+  useIgnoreLenisScroll(".scroll");
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div className="scroll absolute z-50 mt-4 max-h-[390px] w-full overflow-y-auto bg-background p-1 font-Futura md:w-1/2">
+          {loading ? (
+            <p className="m-1 px-5 py-2 font-Poppins text-second text-xs">
+              Searching...
+            </p>
+          ) : (
+            users.map((user) => <SearchedUser key={user._id} user={user} />)
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+```
+
+---
+
 ## 📦 Currently Available Hooks
 
 ### 1. `useInfiniteScroll`
@@ -87,38 +166,15 @@ export default function Feed() {
 **Package**: `@eightmay/use-infinite-scroll`  
 **Description**: A hook for implementing infinite scrolling in your React applications.
 
-#### Installation
+### 2. `useSmoothScroll`
 
-```bash
-pnpm add @eightmay/use-infinite-scroll
-```
+**Package**: `@eightmay/use-custom-lenis`  
+**Description**: A hook for enabling smooth scrolling behavior using Lenis.
 
-#### Usage
+### 3. `useIgnoreLenisScroll`
 
-```tsx
-import { useInfiniteScroll } from "@eightmay/hooks";
-import { useRef } from "react";
-
-function App() {
-  const scrollRef = useRef(null);
-
-  const onBottomReach = async () => {
-    // Logic to fetch more data
-  };
-
-  useInfiniteScroll({
-    scrollRef,
-    threshold: 80,
-    onReach: onBottomReach,
-  });
-
-  return (
-    <div ref={scrollRef} className="scroll-container">
-      {/* Render content */}
-    </div>
-  );
-}
-```
+**Package**: `@eightmay/use-custom-lenis`  
+**Description**: A hook for temporarily disabling Lenis scrolling on specific containers.
 
 ---
 
@@ -130,15 +186,6 @@ function App() {
 
 ---
 
-<!-- ## 🛠️ Contributing
-
-Contributions are welcome! If you’d like to add a new hook:
-
-1. Create a new hook package.
-2. Add it to the aggregator package.
-3. Update the documentation.
-
-For more details, refer to the [Eightmay Monorepo README](../../README.md). -->
 ## 🏁 License
 
 MIT © Eightmay

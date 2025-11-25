@@ -20,6 +20,9 @@ importers:
       '@rollup/plugin-typescript':
         specifier: ^12.3.0
         version: 12.3.0(rollup@4.53.3)(tslib@2.8.1)(typescript@5.9.3)
+      '@studio-freight/lenis':
+        specifier: ^1.0.42
+        version: 1.0.42
       '@types/react':
         specifier: ^19.2.6
         version: 19.2.6
@@ -46,6 +49,12 @@ importers:
         version: 5.9.3
 
   packages/hooks:
+    dependencies:
+      react:
+        specifier: '>=18'
+        version: 19.2.0
+
+  packages/use-custom-lenis:
     dependencies:
       react:
         specifier: '>=18'
@@ -236,6 +245,10 @@ packages:
     resolution: {integrity: sha512-UhTd8u31dXadv0MopwGgNOBpUVROFKWVQgAg5N1ESyCz8AuBcMqm4AuTjrwgQKGDfoFuz02EuMRHQIw/frmYKQ==}
     cpu: [x64]
     os: [win32]
+
+  '@studio-freight/lenis@1.0.42':
+    resolution: {integrity: sha512-HJAGf2DeM+BTvKzHv752z6Z7zy6bA643nZM7W88Ft9tnw2GsJSp6iJ+3cekjyMIWH+cloL2U9X82dKXgdU8kPg==}
+    deprecated: 'The ''@studio-freight/lenis'' package has been renamed to ''lenis''. Please update your dependencies: npm install lenis and visit the documentation: https://www.npmjs.com/package/lenis'
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
@@ -513,6 +526,8 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.53.3':
     optional: true
+
+  '@studio-freight/lenis@1.0.42': {}
 
   '@types/estree@1.0.8': {}
 

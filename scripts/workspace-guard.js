@@ -1,31 +1,3 @@
-// import fs from "fs";
-// import path from "path";
-
-// const root = process.cwd();
-// const packagesDir = path.join(root, "packages");
-
-// console.log("🔍 Running workspace guard...");
-
-// let removed = 0;
-
-// for (const pkg of fs.readdirSync(packagesDir)) {
-//   const pkgPath = path.join(packagesDir, pkg);
-//   const nodeModules = path.join(pkgPath, "node_modules");
-
-//   if (fs.existsSync(nodeModules)) {
-//     console.log(`⚠️  Removing nested node_modules → ${pkg}`);
-//     fs.rmSync(nodeModules, { recursive: true, force: true });
-//     removed++;
-//   }
-// }
-
-// if (removed === 0) {
-//   console.log("✅ No nested node_modules found.");
-// }
-
-// console.log("🛡️ Workspace guard complete.\n");
-
-
 import fs from "fs";
 import path from "path";
 
@@ -51,7 +23,9 @@ if (invalid.length > 0) {
   console.error("❌ ILLEGAL node_modules detected in:");
   invalid.forEach((p) => console.error("   - " + p));
 
-  console.error("\n🛑 STOP! Nested node_modules are not allowed in this monorepo.");
+  console.error(
+    "\n🛑 STOP! Nested node_modules are not allowed in this monorepo."
+  );
   console.error("💡 Fixing automatically...");
 
   invalid.forEach((p) => {
@@ -61,8 +35,7 @@ if (invalid.length > 0) {
   });
 
   console.log("\n✔ All illegal folders removed.");
-}
-else {
+} else {
   console.log("✔ No illegal node_modules folders detected.");
 }
 

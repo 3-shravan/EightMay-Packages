@@ -1,15 +1,12 @@
 {
-  "name": "@eightmay/use-infinite-scroll",
-  "version": "1.0.2",
-  "description": "Lightweight React infinite scroll hook",
+  "name": "@eightmay/use-custom-lenis",
+  "version": "1.0.1",
   "license": "MIT",
+  "description": "Lightweight React hook",
   "keywords": [
-    "react",
+    "eightmay",
     "hook",
-    "infinite",
-    "scroll",
-    "infinite-scroll",
-    "use-infinite-scroll"
+    "usecustomlenis"
   ],
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -17,11 +14,12 @@
   "files": [
     "dist"
   ],
+  "peerDependencies": {
+    "react": ">=18",
+    "@studio-freight/lenis": ">=1"
+  },
   "scripts": {
     "build": "rimraf dist && rollup -c",
     "prepack": "pnpm run build"
-  },
-  "peerDependencies": {
-    "react": ">=18"
   }
 }
